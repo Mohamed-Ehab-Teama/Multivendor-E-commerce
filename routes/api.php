@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\AuthController;
-
+use App\Http\Controllers\API\Auth\OtpController;
 
 // Auth Routes
 Route::controller(AuthController::class)->group(function () {
@@ -13,6 +13,12 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     // Log out
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+});
+
+// OTP Routes
+Route::controller(OtpController::class)->group(function () {
+    // Verify Email
+    Route::post('/verify-email', [OtpController::class, 'sendOtp']);
 });
 
 

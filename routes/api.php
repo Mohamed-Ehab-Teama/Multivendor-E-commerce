@@ -18,7 +18,7 @@ Route::controller(AuthController::class)->group(function () {
 // OTP Routes
 Route::controller(OtpController::class)->group(function () {
     // Verify Email
-    Route::post('/verify-email', [OtpController::class, 'sendOtp']);
+    Route::post('/verify-email', [OtpController::class, 'verifyEmail']);
 });
 
 

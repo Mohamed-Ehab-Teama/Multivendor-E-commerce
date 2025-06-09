@@ -20,9 +20,16 @@ Route::controller(OtpController::class)->group(function () {
     // Send OTP to verify Email
     Route::post('/send-otp-email-verify', [OtpController::class, 'sendEmailVerificationOtp'])
         ->middleware('auth:sanctum');
+
     // Verify Email
     Route::post('/verify-email', [OtpController::class, 'verifyEmail'])
         ->middleware('auth:sanctum');
+
+    // Forget Password
+    Route::Post('/forget-password', [OtpController::class, 'sendResetPasswordOtp'])->middleware('auth:sanctum');
+
+    // Reset Password
+    Route::post('/reset-password', [OtpController::class, 'resetPassword'])->middleware('auth:sanctum');
 });
 
 

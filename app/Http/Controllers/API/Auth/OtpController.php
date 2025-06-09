@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\API\Auth;
 
 use App\Models\Otp;
+use App\Models\User;
 use App\Mail\SendOtpMail;
 use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
-use Workbench\App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\VerifyEmailRequest;
@@ -14,21 +14,27 @@ use App\Http\Requests\VerifyEmailRequest;
 class OtpController extends Controller
 {
 
-    // Send OTP To the email
-    public function sendOtp($email)
+    // Send OTP To verify email
+    public function sendEmailVerificationOtp(Request $request)
     {
+        $request->validate([
+            'email'     => 'required|email|exists:users,email',
+        ]);
+
         // Generate an OTP
         $otp = rand(1000, 9999);
 
         // Store the otp in the Database
         Otp::create([
-            'email' => $email,
-            'otp'   => $otp,
+            'email'         => $request->email,
+            'otp'           => $otp,
             'expires_at'    => now()->addMinutes(10),
         ]);
 
         // Send Email with OTP
-        Mail::to($email)->Send(new SendOtpMail($otp));
+        Mail::to($request->email)->Send(new SendOtpMail($otp));
+
+        return ApiResponse::SendResponse(200, "OTP Sent Successfully", []);
     }
 
 
@@ -50,7 +56,7 @@ class OtpController extends Controller
         }
 
         // Update otp table
-        $otpCheck->user = true;
+        $otpCheck->used = true;
         $otpCheck->save();
 
         // Get the User

@@ -15,6 +15,20 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
     use HasApiTokens, HasRoles;
 
+
+
+    // ===================================================  Relations       ==============  //
+    // Relation Between User & Vendor-Profile
+    public function vendorProfile()
+    {
+        return $this->hasOne(VendorProfile::class);
+    }
+    // ===================================================  Relations End   ==============  //
+
+
+
+    
+
     /**
      * The attributes that are mass assignable.
      *

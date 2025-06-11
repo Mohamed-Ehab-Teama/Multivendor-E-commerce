@@ -4,8 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\AuthController;
 use App\Http\Controllers\API\Auth\OtpController;
+use App\Http\Controllers\API\Vendor\VendorProfileController;
+use Spatie\Permission\Contracts\Role;
 
-// Auth Routes
+// ==============================   Auth Routes     ============================== //
 Route::controller(AuthController::class)->group(function () {
     // Register
     Route::post('/register', [AuthController::class, 'register']);
@@ -15,7 +17,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
 
-// OTP Routes
+// ==============================   OTP Routes      ============================== //
 Route::controller(OtpController::class)->group(function () {
     // Send OTP to verify Email
     Route::post('/send-otp-email-verify', [OtpController::class, 'sendEmailVerificationOtp'])
@@ -31,6 +33,27 @@ Route::controller(OtpController::class)->group(function () {
     // Reset Password
     Route::post('/reset-password', [OtpController::class, 'resetPassword'])->middleware('auth:sanctum');
 });
+
+
+// ==============================   Vendor Routes   ============================== //
+Route::controller(VendorProfileController::class)
+    ->middleware(['auth:sanctum', 'role:vendor'])
+    ->prefix('vendor')
+    ->group(function () {
+        // Show Vendor Profile
+        Route::get('/profile', 'showVendorProfile');
+
+        // Create or Update Vendor Profile Data
+        Route::post('/profile', 'storeOrUpdateVendorProfile');
+    });
+
+
+
+
+
+
+
+
 
 
 // Route::get('/user', function (Request $request) {

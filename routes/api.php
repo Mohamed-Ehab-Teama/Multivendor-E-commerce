@@ -55,11 +55,12 @@ Route::controller(VendorProfileController::class)
 Route::controller(ProductController::class)
     ->middleware(['auth:sanctum', 'role:vendor'])
     ->prefix('vendor')
+    ->name('product')
     ->group(function () {
         Route::get('/products', 'index');
         Route::post('/products', 'store');
-        Route::get('/products/{id}', 'show');
-        Route::put('/products/{id}', 'update');
-        Route::delete('/products/{id}', 'destroy');
+        Route::get('/products/{product}', 'show');
+        Route::post('/products/{product}', 'update');
+        Route::delete('/products/{product}', 'destroy');
     });
 // ==============================   Products Routes End   ============================== //

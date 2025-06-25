@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
-class CreateProductRequest extends FormRequest
+class UpdateProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -36,7 +36,9 @@ class CreateProductRequest extends FormRequest
     {
         return [
             'name'          => 'required|string|max:255',
-            'slug'          => 'required|string|unique:products,slug',
+            'slug'          => 'required|string|unique:products,slug,' . $this->product->id,
+            // 'slug'          => 'required|string|' .
+            //     Rule::unique('products', 'slug')->ignore($this->product),
             'price'         => 'required|numeric',
             'quantity'      => 'required|integer',
             'description'   => 'nullable|string',

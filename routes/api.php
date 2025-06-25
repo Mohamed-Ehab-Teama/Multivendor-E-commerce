@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\AuthController;
 use App\Http\Controllers\API\Auth\OtpController;
+use App\Http\Controllers\API\Vendor\ProductController;
 use App\Http\Controllers\API\Vendor\VendorProfileController;
 use Spatie\Permission\Contracts\Role;
 
@@ -46,16 +47,19 @@ Route::controller(VendorProfileController::class)
         // Create or Update Vendor Profile Data
         Route::post('/profile', 'storeOrUpdateVendorProfile');
     });
+// ==============================   Vendor Routes End   ============================== //
 
 
 
-
-
-
-
-
-
-
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
+// ==============================   Products Routes   ============================== //
+Route::controller(ProductController::class)
+    ->middleware(['auth:sanctum', 'role:vendor'])
+    ->prefix('vendor')
+    ->group(function () {
+        Route::get('/products', 'index');
+        Route::post('/products', 'store');
+        Route::get('/products/{id}', 'show');
+        Route::put('/products/{id}', 'update');
+        Route::delete('/products/{id}', 'destroy');
+    });
+// ==============================   Products Routes End   ============================== //

@@ -23,6 +23,13 @@ class User extends Authenticatable
     {
         return $this->hasOne(VendorProfile::class);
     }
+
+
+    // Relation Between Vendor & Products
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'vendor_id');
+    }
     // ===================================================  Relations End   ==============  //
 
 

@@ -13,6 +13,14 @@ class Product extends Model
     {
         return $this->belongsTo(User::class, 'vendor_id');
     }
+
+
+
+    // Relation Between Category & Products
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
     // ===================================================  Relations End   ==============  //
 
 

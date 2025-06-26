@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\Admin\CategoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\AuthController;
@@ -55,7 +56,6 @@ Route::controller(VendorProfileController::class)
 Route::controller(ProductController::class)
     ->middleware(['auth:sanctum', 'role:vendor'])
     ->prefix('vendor')
-    ->name('product')
     ->group(function () {
         Route::get('/products', 'index');
         Route::post('/products', 'store');
@@ -64,3 +64,18 @@ Route::controller(ProductController::class)
         Route::delete('/products/{product}', 'destroy');
     });
 // ==============================   Products Routes End   ============================== //
+
+
+
+// ==============================   Categories Routes   ============================== //
+Route::controller(CategoryController::class)
+    ->prefix('category')
+    ->middleware(['auth:sanctum', 'role:admin'])
+    ->group(function() {
+        Route::get('/categories', 'index');
+        Route::post('/categories', 'store');
+        Route::get('/categories/{category}', 'show');
+        Route::put('/categories/{category}', 'update');
+        Route::delete('/categories/{category}', 'destroy');
+    });
+// ==============================   Categories Routes End   ============================== //

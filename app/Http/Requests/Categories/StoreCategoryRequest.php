@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Products;
+namespace App\Http\Requests\Categories;
 
 use App\Helpers\ApiResponse;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
-class CreateProductRequest extends FormRequest
+class StoreCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -18,11 +17,11 @@ class CreateProductRequest extends FormRequest
     }
 
 
-    // If failed Validation
+
     public function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
     {
-        $response = ApiResponse::SendResponse(422, 'Validation Errors', $validator->errors());
-        throw new ValidationException($validator, $response);
+        $res = ApiResponse::SendResponse(422, 'Validation Errors', $validator->errors());
+        throw new ValidationException($validator, $res);
     }
 
 
@@ -36,12 +35,8 @@ class CreateProductRequest extends FormRequest
     {
         return [
             'name'          => 'required|string|max:255',
-            'slug'          => 'required|string|unique:products,slug',
-            'price'         => 'required|numeric',
-            'quantity'      => 'required|integer',
-            'description'   => 'nullable|string',
-            'image'         => 'nullable|image|max:2048',
-            'category_id'   => 'required|exists:categories,id',
+            'slug'          => 'required|string|unique:categories,slug',
+            'parent_id'     => 'nullable|exists:categories,id',
         ];
     }
 }

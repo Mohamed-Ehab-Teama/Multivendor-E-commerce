@@ -48,7 +48,6 @@ Route::controller(VendorProfileController::class)
         // Create or Update Vendor Profile Data
         Route::post('/profile', 'storeOrUpdateVendorProfile');
     });
-// ==============================   Vendor Routes End   ============================== //
 
 
 
@@ -63,13 +62,12 @@ Route::controller(ProductController::class)
         Route::post('/products/{product}', 'update');
         Route::delete('/products/{product}', 'destroy');
     });
-// ==============================   Products Routes End   ============================== //
 
 
 
 // ==============================   Categories Routes   ============================== //
 Route::controller(CategoryController::class)
-    ->prefix('category')
+    ->prefix('admin')
     ->middleware(['auth:sanctum', 'role:admin'])
     ->group(function() {
         Route::get('/categories', 'index');
@@ -78,4 +76,3 @@ Route::controller(CategoryController::class)
         Route::put('/categories/{category}', 'update');
         Route::delete('/categories/{category}', 'destroy');
     });
-// ==============================   Categories Routes End   ============================== //

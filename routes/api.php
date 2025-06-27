@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\AuthController;
 use App\Http\Controllers\API\Auth\OtpController;
+use App\Http\Controllers\API\Public\ProductController as PublicProductController;
 use App\Http\Controllers\API\Vendor\ProductController;
 use App\Http\Controllers\API\Vendor\VendorProfileController;
 use Spatie\Permission\Contracts\Role;
@@ -75,4 +76,14 @@ Route::controller(CategoryController::class)
         Route::get('/categories/{category}', 'show');
         Route::put('/categories/{category}', 'update');
         Route::delete('/categories/{category}', 'destroy');
+    });
+
+
+
+// ==============================   Public Producrs Routes   ============================== //
+Route::controller(PublicProductController::class)
+    ->prefix('public')
+    ->group(function () {
+        Route::get('/products', 'index');
+        Route::get('/products/{slug}', 'show');
     });

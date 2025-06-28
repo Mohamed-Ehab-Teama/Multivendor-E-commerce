@@ -30,6 +30,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(Product::class, 'vendor_id');
     }
+
+
+    // Relation Between User & Cart
+    public function cart()
+    {
+        return $this->hasMany(Cart::class);
+    }
     // ===================================================  Relations End   ==============  //
 
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\Admin\CategoryController;
+use App\Http\Controllers\API\Customer\CartController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\AuthController;
@@ -70,7 +71,7 @@ Route::controller(ProductController::class)
 Route::controller(CategoryController::class)
     ->prefix('admin')
     ->middleware(['auth:sanctum', 'role:admin'])
-    ->group(function() {
+    ->group(function () {
         Route::get('/categories', 'index');
         Route::post('/categories', 'store');
         Route::get('/categories/{category}', 'show');
@@ -86,4 +87,17 @@ Route::controller(PublicProductController::class)
     ->group(function () {
         Route::get('/products', 'index');
         Route::get('/products/{slug}', 'show');
+    });
+
+
+
+// ==============================   Public Producrs Routes   ============================== //
+Route::controller(CartController::class)
+    ->prefix('cart')
+    ->middleware(['auth:sanctum', 'role:customer'])
+    ->group(function () {
+        Route::get('/', 'index');                       // Show Cart items
+        Route::post('/add', 'add');                     // Add item
+        Route::put('update/{product}', 'update');       // Update Quantity
+        Route::delete('/remove/{product}', 'remove');   // Remove item
     });

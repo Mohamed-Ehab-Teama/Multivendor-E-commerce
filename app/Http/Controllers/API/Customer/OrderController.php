@@ -20,7 +20,7 @@ class OrderController extends Controller
         $user = $request->user();
 
         // Get User's Orders
-        $AllOrders = $user->orders()->with('items')->get();
+        $AllOrders = $user->orders()->with('items.product')->get();
 
         return ApiResponse::SendResponse(200, "Orders Retrieved Successfully", $AllOrders);
     }

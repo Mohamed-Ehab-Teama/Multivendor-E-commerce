@@ -27,21 +27,40 @@ class CartController extends Controller
     {
         $data = $addToCartRequest->validated();
 
-        $cartItem = $request->user()->cart()->where('product_id', $data['product_id'])->first();
+        // Get Authenticated User & other data sent through the request
+        $user = $request->user();
+        $product_id = $data['product_id'];
+        $quantityToAdd = $data['quantity'];
 
-        if ($cartItem) {
-            $cartItem->quantity += $data['quantity'];
-            $cartItem->save();
+        // Get The targeted product
+        $product = Product::findOrFail($product_id);
+
+        // Get the Cart Item
+        $existingCartItem = $user->cart()->where('product_id', $product_id)->first();
+        $existingQuantity = $existingCartItem ? $existingCartItem->quantity : 0;
+        $totalQuantity = $existingQuantity + $quantityToAdd;
+
+        // Check on quantity
+        if ($totalQuantity > $product->quantity)
+        {
+            return ApiResponse::SendResponse(200, 'Not Enough Stock', []);
+        }
+
+        // Add or Update the quantity
+        if ($existingCartItem) 
+        {
+            $existingCartItem->quantity += $data['quantity'];
+            $existingCartItem->save();
         } 
         else 
         {
-            $cartItem = $request->user()->cart()->create([
+            $existingCartItem = $user->cart()->create([
                 'product_id'    => $data['product_id'],
                 'quantity'      => $data['quantity'],
             ]);
         }
 
-        return ApiResponse::SendResponse(200, 'Added To Cart Successfully', $cartItem);
+        return ApiResponse::SendResponse(200, 'Added To Cart Successfully', $existingCartItem);
     }
 
 
@@ -52,7 +71,17 @@ class CartController extends Controller
             'quantity' => 'required|integer|min:1',
         ]);
 
-        $cartItem = $request->user()->cart()->where('product_id', $product->id)->firstOrFail();
+        $user = $request->user();
+        $updateQuantity = $request->quantity;
+
+        $cartItem = $user->cart()->where('product_id', $product->id)->firstOrFail();
+
+        // Check on the Quantity
+        if ( $updateQuantity > $product->quantity )
+        {
+            return ApiResponse::SendResponse(200, 'Not Enough Stock', []);
+        }
+
         $cartItem->update(['quantity' => $request->quantity]);
 
         return ApiResponse::SendResponse(200, 'Cart Updated Successfully', $cartItem);

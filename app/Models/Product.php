@@ -29,6 +29,14 @@ class Product extends Model
     {
         return $this->hasMany(Cart::class);
     }
+
+
+
+    // OrderItem & Product
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class, 'product_id');
+    }
     // ===================================================  Relations End   ==============  //
 
 

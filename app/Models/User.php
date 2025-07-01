@@ -37,6 +37,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(Cart::class);
     }
+
+
+    // Order & USer
+    public function orders()
+    {
+        return $this->hasMany(Order::class , 'user_id');
+    }
     // ===================================================  Relations End   ==============  //
 
 

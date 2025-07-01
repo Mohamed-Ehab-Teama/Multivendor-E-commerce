@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\Admin\CategoryController;
 use App\Http\Controllers\API\Customer\CartController;
+use App\Http\Controllers\API\Customer\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\AuthController;
@@ -100,4 +101,16 @@ Route::controller(CartController::class)
         Route::post('/add', 'add');                     // Add item
         Route::put('update/{product}', 'update');       // Update Quantity
         Route::delete('/remove/{product}', 'remove');   // Remove item
+    });
+
+
+
+
+// ==============================   Public Producrs Routes   ============================== //
+Route::controller(OrderController::class)
+    ->prefix('orders')
+    ->middleware(['auth:sanctum', 'role:customer'])
+    ->group(function () {
+        Route::get('/orders', 'index');
+        Route::post('/place-order', 'placeOrder');
     });

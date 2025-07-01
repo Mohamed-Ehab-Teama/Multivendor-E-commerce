@@ -112,5 +112,6 @@ Route::controller(OrderController::class)
     ->middleware(['auth:sanctum', 'role:customer'])
     ->group(function () {
         Route::get('/orders', 'index');
+        Route::get('/orders/{order}', 'show');
         Route::post('/place-order', 'placeOrder');
     });

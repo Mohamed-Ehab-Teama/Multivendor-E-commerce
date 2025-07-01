@@ -26,6 +26,18 @@ class OrderController extends Controller
     }
 
 
+
+    // Show Single Order
+    public function show(Request $request, Order $order)
+    {
+        $user = $request->user();
+        $showOrder = $user->orders()->with('items.product')->findOrFail($order->id);
+
+        return ApiResponse::SendResponse(200, "Order Retrieved Successfully", $showOrder);
+    }
+
+
+
     
     // Place Order
     public function placeOrder(Request $request)

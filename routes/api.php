@@ -22,6 +22,8 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
 
+
+
 // ==============================   OTP Routes      ============================== //
 Route::controller(OtpController::class)->group(function () {
     // Send OTP to verify Email
@@ -38,6 +40,7 @@ Route::controller(OtpController::class)->group(function () {
     // Reset Password
     Route::post('/reset-password', [OtpController::class, 'resetPassword'])->middleware('auth:sanctum');
 });
+
 
 
 // ==============================   Vendor Routes   ============================== //
@@ -105,7 +108,6 @@ Route::controller(CartController::class)
 
 
 
-
 // ==============================   Public Producrs Routes   ============================== //
 Route::controller(OrderController::class)
     ->prefix('orders')
@@ -115,3 +117,7 @@ Route::controller(OrderController::class)
         Route::get('/orders/{order}', 'show');
         Route::post('/place-order', 'placeOrder');
     });
+
+
+
+// 

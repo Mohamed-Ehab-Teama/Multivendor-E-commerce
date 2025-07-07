@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\OrderItem;
+use App\Services\PaymentGatewayFactory;
 
 class OrderController extends Controller
 {
@@ -38,30 +39,31 @@ class OrderController extends Controller
 
 
 
-    
+
     // Place Order
     public function placeOrder(Request $request)
     {
+        $request->validate([
+            'payment_type'  => 'required|string',
+        ]);
+
         // get user
         $user = $request->user();
         // Get Cart Items
         $cartItems = $user->cart()->with('product')->get();
 
-        if ($cartItems->isEmpty())
-        {
+        if ($cartItems->isEmpty()) {
             return ApiResponse::SendResponse(422, "Cart is empty", []);
         }
 
         // Start DB transaction
         DB::beginTransaction();
 
-        try{
+        try {
             $total = 0;
 
-            foreach($cartItems as $item)
-            {
-                if ( $item->quantity > $item->product->quantity )
-                {
+            foreach ($cartItems as $item) {
+                if ($item->quantity > $item->product->quantity) {
                     return ApiResponse::SendResponse(422, "Out Of Stock for {$item->product->name}", []);
                 }
 
@@ -76,8 +78,7 @@ class OrderController extends Controller
             ]);
 
             // Create order-Items
-            foreach( $cartItems as $item )
-            {
+            foreach ($cartItems as $item) {
                 OrderItem::create([
                     'order_id'          => $order->id,
                     'product_id'        => $item->product_id,
@@ -93,20 +94,25 @@ class OrderController extends Controller
             $user->cart()->delete();
 
 
+            // Create Stripe Payment Session
+            $paymentService = PaymentGatewayFactory::make($request->payment_type);
+            $paymentResult = $paymentService->pay([
+                'order' => $order,
+                'user' => $user,
+            ]);
+            // Create Stripe Payment Session End
+
+            // dd($paymentResult);
+
             // Commit Changes to DB
             DB::commit();
 
-            return ApiResponse::SendResponse(200, 'Order Made Successfully', $order);
-
-        }
-        catch (Exception $e)
-        {
+            return ApiResponse::SendResponse(200, 'Order Made Successfully', $paymentResult['payment_url']);
+            
+        } catch (Exception $e) {
             DB::rollBack();
 
             return ApiResponse::SendResponse(500, 'Order Made Successfully', $e->getMessage());
         }
-        
-
     }
-
 }

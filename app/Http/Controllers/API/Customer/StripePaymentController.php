@@ -8,7 +8,7 @@ use App\Models\Order;
 use App\Services\PaymentGatewayFactory;
 use Illuminate\Http\Request;
 
-class PaymentController extends Controller
+class StripePaymentController extends Controller
 {
 
     public function handleStripeSuccess (Request $request)

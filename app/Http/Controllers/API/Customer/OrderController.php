@@ -107,7 +107,7 @@ class OrderController extends Controller
             // Commit Changes to DB
             DB::commit();
 
-            return ApiResponse::SendResponse(200, 'Order Made Successfully', $paymentResult['payment_url']);
+            return ApiResponse::SendResponse(200, 'Order Made Successfully', $paymentResult);
             
         } catch (Exception $e) {
             DB::rollBack();
